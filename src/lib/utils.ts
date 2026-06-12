@@ -14,7 +14,7 @@ export function createId(prefix = "id"): string {
 
 /** Human-readable timestamp for history/gallery cards. */
 export function formatTimestamp(ts: number): string {
-  return new Date(ts).toLocaleString(undefined, {
+  return new Date(ts).toLocaleString("en-US", {
     month: "short",
     day: "numeric",
     hour: "2-digit",
@@ -23,7 +23,10 @@ export function formatTimestamp(ts: number): string {
 }
 
 export function formatUsd(value: number): string {
-  return new Intl.NumberFormat(undefined, {
+  // Pin the locale to "en-US" so server and client render identical strings
+  // (the runtime default locale differs between Node and the browser, which
+  // would otherwise cause a React hydration mismatch, e.g. "$0.00" vs "US$0.00").
+  return new Intl.NumberFormat("en-US", {
     style: "currency",
     currency: "USD",
     minimumFractionDigits: 2,
